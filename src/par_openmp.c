@@ -3,7 +3,7 @@
 #include <time.h>
 #include <omp.h>
 
-#define PASSWORD "12345678"   // senha alvo
+#define PASSWORD "12345678"
 #define MAX_LEN 8
 
 const char charset[] = "0123456789";
