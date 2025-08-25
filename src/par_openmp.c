@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>   // <-- precisa disso para atoi
+#include <stdlib.h>
 #include <omp.h>
 
 #define PASSWORD "12345678"   // senha alvo
-#define MAX_LEN 8         // use 4 para testar (8 explode em tempo!)
+#define MAX_LEN 8         // tamanho da senha
 
 const char charset[] = "0123456789";
 int charset_size;
