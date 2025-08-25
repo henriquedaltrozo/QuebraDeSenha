@@ -26,7 +26,7 @@ void brute_force(int tid, int n_threads) {
 
         for (int pos = MAX_LEN - 1; pos >= 0; pos--) {
             tentativa[pos] = charset[num % charset_size];
-            //printf("Senha encontrada: %s\n", tentativa);
+            //printf("%s\n",tentativa);
             num /= charset_size;
         }
         tentativa[MAX_LEN] = '\0';
