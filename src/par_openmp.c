@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <omp.h>
+#include <stdlib.h>
 
 #define PASSWORD "12345678"  // Senha alvo
 #define MAX_LEN 8
