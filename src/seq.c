@@ -17,7 +17,7 @@ void gerar_senha(char *tentativa, int pos) {
     if (pos == MAX_LEN) {
         tentativa[pos] = '\0';
         if (strcmp(tentativa, PASSWORD) == 0) {
-            printf("Senha encontrada: %s\n", tentativa);
+            //printf("Senha encontrada: %s\n", tentativa);
             achou = 1;
         }
         return;
