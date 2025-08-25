@@ -1,28 +1,19 @@
 #include <stdio.h>
 #include <string.h>
 #include <omp.h>
-#include <stdlib.h>
 
 #define PASSWORD "12345678"  // Senha alvo
 #define MAX_LEN 8
 
 int main(int argc, char *argv[]) {
-<<<<<<< HEAD
-    int n_threads = (argc > 1) ? atoi(argv[1]) : 4;  // Número de threads
-=======
     int n_threads = (argc > 1) ? atoi(argv[1]) : 4;  // número de threads
->>>>>>> 2dcc9d527fba5d9c812bca13943ee957044e7270
     char tentativa[MAX_LEN + 1];
     int achou = 0;
 
     double inicio = omp_get_wtime();
 
     #pragma omp parallel for num_threads(n_threads) private(tentativa) shared(achou)
-<<<<<<< HEAD
-    for (long long i = 0; i < 100000000; i++) {  // 10^8 possibilidades
-=======
-    for (long long i = 0; i < 100000000; i++) {
->>>>>>> 2dcc9d527fba5d9c812bca13943ee957044e7270
+    for (long long i = 0; i < 100000000; i++) { 
         if (!achou) {
             sprintf(tentativa, "%08lld", i);
 
