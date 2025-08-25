@@ -12,15 +12,10 @@ Programa usado para quebrar uma senha de 8 caracteres numéricos.
 2. Sequencial:
 
    ```bash
-   ./seq 99999999
+   ./seq
    ```
-3. Pthread:
+3. Paralela:
 
    ```bash
-   ./par_pthread 99999999 4
-   ```
-
-4. OpenMP:
-   ```bash
-   ./par_openmp 99999999 4
+   ./par_openmp
    ```

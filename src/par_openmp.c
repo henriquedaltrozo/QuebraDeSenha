@@ -1,74 +1,35 @@
-/* par_openmp.c
-   Busca por força bruta com OpenMP. Usa loop parallel for e checa flag compartilhada para abortar trabalho adicional.
-   Uso: ./par_openmp 12345678 NTHREADS
-   Compilar com -fopenmp
-*/
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
-#include <time.h>
 #include <omp.h>
+#include <stdlib.h>
 
-#define TOTAL 100000000u
-
-static double timespec_diff_sec(struct timespec a, struct timespec b) {
-    return (a.tv_sec - b.tv_sec) + (a.tv_nsec - b.tv_nsec) / 1e9;
-}
+#define PASSWORD "12345678"  // Senha alvo
+#define MAX_LEN 8
 
 int main(int argc, char *argv[]) {
-    if (argc < 3) {
-        printf("Insira uma senha (Ex: 01234567)\ne o numero de threads (Ex: 4)\n", argv[0], argv[0]);
-        return 1;
-    }
-    char *target_str = argv[1];
-    if (strlen(target_str) != 8) {
-        fprintf(stderr, "A senha deve ter exatamente 8 caracteres.\n");
-        return 1;
-    }
-    unsigned int target = (unsigned int) strtoul(target_str, NULL, 10);
-    int nthreads = atoi(argv[2]);
-    if (nthreads <= 0) nthreads = 1;
+    int n_threads = (argc > 1) ? atoi(argv[1]) : 4;  // Número de threads
+    char tentativa[MAX_LEN + 1];
+    int achou = 0;
 
-    omp_set_num_threads(nthreads);
+    double inicio = omp_get_wtime();
 
-    volatile int found_flag = 0;
-    unsigned int found_value = 0;
+    #pragma omp parallel for num_threads(n_threads) private(tentativa) shared(achou)
+    for (long long i = 0; i < 100000000; i++) {  // 10^8 possibilidades
+        if (!achou) {
+            sprintf(tentativa, "%08lld", i);
 
-    struct timespec t0, t1;
-    clock_gettime(CLOCK_MONOTONIC, &t0);
-
-    #pragma omp parallel
-    {
-        int tid = omp_get_thread_num();
-        int nth = omp_get_num_threads();
-        for (unsigned int i = tid; i < TOTAL; i += nth) {
-            if (found_flag) break;
-            if (i == target) {
-                found_value = i;
-                found_flag = 1;
-                break;
+            if (strcmp(tentativa, PASSWORD) == 0) {
+                #pragma omp critical
+                {
+                    achou = 1;
+                    printf("Senha encontrada: %s (Thread %d)\n", tentativa, omp_get_thread_num());
+                }
             }
         }
     }
 
-    clock_gettime(CLOCK_MONOTONIC, &t1);
-    double elapsed = timespec_diff_sec(t1, t0);
-
-    printf("Modo: OPENMP\n");
-    printf("Senha alvo: %s (as int: %u)\n", target_str, target);
-    printf("Threads: %d\n", nthreads);
-    printf("Encontrado: %08u\n", found_value);
-    printf("Tempo: %.6f s\n", elapsed);
-
-    FILE *f = fopen("tempos.txt", "a");
-    if (f) {
-        fprintf(f, "OPENMP target=%s threads=%d found=%08u time=%.6f\n", target_str, nthreads, found_value, elapsed);
-        fclose(f);
-    } else {
-        perror("Erro ao abrir tempos.txt");
-    }
+    double fim = omp_get_wtime();
+    printf("Tempo de execução: %.3f segundos\n", fim - inicio);
 
     return 0;
 }
